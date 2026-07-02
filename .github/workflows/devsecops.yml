@@ -16,21 +16,19 @@ jobs:
     - name: Checkout Source Code
       uses: actions/checkout@v4
       with:
-        fetch-depth: 0 # Crucial for GitLeaks to scan commit history
+        fetch-depth: 0 
 
-    # Step 2: Set up Node.js environment for dependency scanning
+    # Step 2: Set up Node.js environment (Updated to Node 24 and fixed cache path)
     - name: Setup Node.js Environment
       uses: actions/setup-node@v4
       with:
-        node-version: '20'
+        node-version: '24'
         cache: 'npm'
-        cache-dependency-path: './vulnerable-api/package-lock.json'
+        cache-dependency-path: './package-lock.json'
 
-    # Step 3: Install dependencies
+    # Step 3: Install dependencies (No need to cd, we are already in the root)
     - name: Install Project Dependencies
-      run: |
-        cd vulnerable-api
-        npm ci
+      run: npm ci
 
     # Step 4: Run GitLeaks natively via their official GitHub Action
     - name: Run GitLeaks (Secret Scanner)
@@ -44,8 +42,6 @@ jobs:
       with:
         config: auto
 
-    # Step 6: Run NPM Audit for Supply Chain check
+    # Step 6: Run NPM Audit for Supply Chain check (No need to cd)
     - name: Run Dependency Audit (SCA)
-      run: |
-        cd vulnerable-api
-        npm audit --audit-level=high
+      run: npm audit --audit-level=high
