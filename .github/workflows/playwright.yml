@@ -17,6 +17,20 @@ jobs:
       run: npm ci
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
+    - name: Start API server
+      run: npm start &
+      env:
+        NODE_ENV: test
+    - name: Wait for server to be ready
+      run: |
+        for i in {1..30}; do
+          if curl -f http://127.0.0.1:3000/api/calculate -X POST -H "Content-Type: application/json" -d '{"equation":"1+1"}' 2>/dev/null; then
+            echo "Server is ready"
+            break
+          fi
+          echo "Waiting for server... ($i/30)"
+          sleep 1
+        done
     - name: Run Playwright tests
       run: npx playwright test
     - uses: actions/upload-artifact@v4

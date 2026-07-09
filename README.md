@@ -29,8 +29,8 @@ The initial iteration of this API contained three distinct vulnerabilities, all 
 ### 2. Arbitrary Code Execution (RCE)
 * **Vulnerability:** The `/api/calculate` endpoint evaluated raw user input using the highly dangerous JavaScript `eval()` function.
 * **Detection:** 
-  * *Static:* **Semgrep** identified the dangerous sink and failed the build.
-  * *Dynamic:* **Playwright** injected the `process.env` payload during runtime, confirming the API returned a `200 OK` with sensitive server variables.
+   * *Static:* **Semgrep** identified the dangerous sink and failed the build.
+   * *Dynamic:* **Playwright** injected the `process.env` payload during runtime, confirming the API returned a `200 OK` with sensitive server variables.
 * **Remediation:** Removed `eval()` entirely. Implemented a strict Regular Expression (`/^(\d+)([\+\-\*\/])(\d+)$/`) to parse and mathematically compute only valid integers and basic operators.
 
 ### 3. Documentation Secrets
@@ -45,4 +45,4 @@ The initial iteration of this API contained three distinct vulnerabilities, all 
 **1. Install Dependencies**
 ```bash
 npm install
-
+```
